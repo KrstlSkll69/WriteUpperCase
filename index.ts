@@ -5,7 +5,7 @@
  */
 
 import { addPreSendListener, removePreSendListener } from "@api/MessageEvents";
-import { definePluginSettings, Settings } from "@api/Settings";
+import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 
 const settings = definePluginSettings(
@@ -25,7 +25,7 @@ export default definePlugin({
         { name: "Samwich", id: 976176454511509554n },
         { name: "krystalskullofficial", id: 929208515883569182n },
     ],
-    patches: [],
+    settings,
 
     start() {
         this.preSend = addPreSendListener(async (_, message) => {
@@ -36,15 +36,12 @@ export default definePlugin({
         this.preSend = removePreSendListener(async (_, message) => {
             message.content = textProcessing(message.content);
         });
-    },
-    settings
+    }
 });
 
-
-// this is probably really badly coded im so fucking sorry :skull:
 function textProcessing(textInput: string): string {
     const sentences = textInput.split(/(?<=\w\.)\s/);
-    const blockedWordsArray: string[] = Settings.plugins.WriteUpperCase.blockedWords.split(", ");
+    const blockedWordsArray: string[] = settings.store.blockedWords.split(", ");
 
     return sentences.map(element => {
         if (!blockedWordsArray.some(word => element.toLowerCase().startsWith(word.toLocaleLowerCase()))) {
