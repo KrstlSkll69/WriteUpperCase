@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addPreSendListener, removePreSendListener } from "@api/MessageEvents";
+import { addPreSendListener, removePreSendListener, SendListener } from "@api/MessageEvents";
 import { definePluginSettings } from "@api/Settings";
+import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 
 const settings = definePluginSettings(
@@ -14,40 +15,35 @@ const settings = definePluginSettings(
             type: OptionType.STRING,
             description: "Strings not to capitilise (seperate with a comma)",
             default: "http, https, ok"
-        },
+        }
     }
 );
 
-export default definePlugin({
-    name: "WriteUpperCase",
-    description: "Changes the first Letter of each Sentence in Message Inputs to Uppercase",
-    authors: [
-        { name: "Samwich", id: 976176454511509554n },
-        { name: "krystalskullofficial", id: 929208515883569182n },
-    ],
-    settings,
-
-    start() {
-        this.preSend = addPreSendListener(async (_, message) => {
-            message.content = textProcessing(message.content);
-        });
-    },
-    stop() {
-        this.preSend = removePreSendListener(async (_, message) => {
-            message.content = textProcessing(message.content);
-        });
-    }
-});
-
-function textProcessing(textInput: string): string {
-    const sentences = textInput.split(/(?<=\w\.)\s/);
+const presendObject: SendListener = (_, msg) => {
+    const sentences = msg.content.split(/(?<=\w\.)\s/);
     const blockedWordsArray: string[] = settings.store.blockedWords.split(", ");
 
-    return sentences.map(element => {
+    msg.content = sentences.map(element => {
         if (!blockedWordsArray.some(word => element.toLowerCase().startsWith(word.toLocaleLowerCase()))) {
             return element.charAt(0).toUpperCase() + element.slice(1);
         } else {
             return element;
         }
     }).join(" ");
-}
+};
+
+export default definePlugin({
+    name: "WriteUpperCase",
+    description: "Changes the first Letter of each Sentence in Message Inputs to Uppercase",
+    authors: [Devs.Samwich, 
+        { name: "krystalskullofficial", id: 929208515883569182n },
+    ],
+    settings,
+
+    start() {
+        addPreSendListener(presendObject);
+    },
+    stop() {
+        removePreSendListener(presendObject);
+    }
+});
