@@ -36,6 +36,7 @@ export default definePlugin({
     name: "WriteUpperCase",
     description: "Changes the first Letter of each Sentence in Message Inputs to Uppercase",
     authors: [Devs.Samwich, 
+        // Import from EquicordDev for Equicord
         { name: "krystalskullofficial", id: 929208515883569182n },
     ],
     settings,
