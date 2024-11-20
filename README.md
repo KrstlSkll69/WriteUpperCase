@@ -1,6 +1,10 @@
 # WriteUpperCase (built into Equicord by default)
 Changes the first Letter of each Sentence in Message Inputs to Uppercase
 
+![](https://cdn.nest.rip/uploads/34dbe985-82a0-453d-8cf1-a4ecfc0616a0.png)
+
+![](https://cdn.nest.rip/uploads/98ffa0c6-8a28-45f6-9164-2cffcfeefa22.png)
+
 ## Install
 
 > [!WARNING]
