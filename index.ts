@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addPreSendListener, removePreSendListener, SendListener } from "@api/MessageEvents";
+import { addMessagePreSendListener, MessageSendListener, removeMessagePreSendListener } from "@api/MessageEvents";
 import { definePluginSettings } from "@api/Settings";
-import { Devs } from "@utils/constants";
+import { Devs, EquicordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 
 const settings = definePluginSettings(
@@ -19,7 +19,7 @@ const settings = definePluginSettings(
     }
 );
 
-const presendObject: SendListener = (_, msg) => {
+const presendObject: MessageSendListener = (_, msg) => {
     const sentences = msg.content.split(/(?<=\w\.)\s/);
     const blockedWordsArray: string[] = settings.store.blockedWords.split(", ");
 
@@ -42,9 +42,9 @@ export default definePlugin({
     settings,
 
     start() {
-        addPreSendListener(presendObject);
+        addMessagePreSendListener(presendObject);
     },
     stop() {
-        removePreSendListener(presendObject);
+        removeMessagePreSendListener(presendObject);
     }
 });
